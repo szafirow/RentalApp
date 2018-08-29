@@ -1,0 +1,13 @@
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\bin\Debug\ProjektDemo.exe.config
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\bin\Debug\Database.mdf
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\bin\Debug\Database_log.ldf
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\bin\Debug\ProjektDemo.exe
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\bin\Debug\ProjektDemo.pdb
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\obj\Debug\ProjektDemo.csprojResolveAssemblyReference.cache
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\obj\Debug\ProjektDemo.Form1.resources
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\obj\Debug\ProjektDemo.Properties.Resources.resources
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\obj\Debug\ProjektDemo.csproj.GenerateResource.Cache
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\obj\Debug\ProjektDemo.exe
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\obj\Debug\ProjektDemo.pdb
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\obj\Debug\ProjektDemo.Form2.resources
+c:\users\patryk\documents\visual studio 2015\Projects\ProjektDemo\ProjektDemo\obj\Debug\ProjektDemo.Form3.resources
