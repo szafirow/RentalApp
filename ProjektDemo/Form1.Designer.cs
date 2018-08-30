@@ -38,11 +38,11 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label2.Location = new System.Drawing.Point(80, 9);
+            this.label2.Location = new System.Drawing.Point(12, 24);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(179, 59);
+            this.label2.Size = new System.Drawing.Size(320, 59);
             this.label2.TabIndex = 2;
-            this.label2.Text = "MENU";
+            this.label2.Text = "FILMOTEKA";
             // 
             // button1
             // 
@@ -85,6 +85,7 @@
             this.Controls.Add(this.label2);
             this.Name = "Form1";
             this.Text = "RentalApp";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

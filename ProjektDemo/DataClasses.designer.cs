@@ -36,9 +36,12 @@ namespace ProjektDemo
     partial void Insertvideo(video instance);
     partial void Updatevideo(video instance);
     partial void Deletevideo(video instance);
-    partial void Insertrent(rent instance);
-    partial void Updaterent(rent instance);
-    partial void Deleterent(rent instance);
+    partial void Insertrental(rental instance);
+    partial void Updaterental(rental instance);
+    partial void Deleterental(rental instance);
+    partial void Insertstatus(status instance);
+    partial void Updatestatus(status instance);
+    partial void Deletestatus(status instance);
     #endregion
 		
 		public DataClassesDataContext() : 
@@ -87,11 +90,19 @@ namespace ProjektDemo
 			}
 		}
 		
-		public System.Data.Linq.Table<rent> rent
+		public System.Data.Linq.Table<rental> rental
 		{
 			get
 			{
-				return this.GetTable<rent>();
+				return this.GetTable<rental>();
+			}
+		}
+		
+		public System.Data.Linq.Table<status> status
+		{
+			get
+			{
+				return this.GetTable<status>();
 			}
 		}
 	}
@@ -108,7 +119,7 @@ namespace ProjektDemo
 		
 		private string _surname;
 		
-		private EntitySet<rent> _rent;
+		private EntitySet<rental> _rental;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -124,7 +135,7 @@ namespace ProjektDemo
 		
 		public clients()
 		{
-			this._rent = new EntitySet<rent>(new Action<rent>(this.attach_rent), new Action<rent>(this.detach_rent));
+			this._rental = new EntitySet<rental>(new Action<rental>(this.attach_rental), new Action<rental>(this.detach_rental));
 			OnCreated();
 		}
 		
@@ -188,16 +199,16 @@ namespace ProjektDemo
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="clients_rent", Storage="_rent", ThisKey="id", OtherKey="clients_id")]
-		public EntitySet<rent> rent
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="clients_rental", Storage="_rental", ThisKey="id", OtherKey="clients_id")]
+		public EntitySet<rental> rental
 		{
 			get
 			{
-				return this._rent;
+				return this._rental;
 			}
 			set
 			{
-				this._rent.Assign(value);
+				this._rental.Assign(value);
 			}
 		}
 		
@@ -221,13 +232,13 @@ namespace ProjektDemo
 			}
 		}
 		
-		private void attach_rent(rent entity)
+		private void attach_rental(rental entity)
 		{
 			this.SendPropertyChanging();
 			entity.clients = this;
 		}
 		
-		private void detach_rent(rent entity)
+		private void detach_rental(rental entity)
 		{
 			this.SendPropertyChanging();
 			entity.clients = null;
@@ -244,7 +255,15 @@ namespace ProjektDemo
 		
 		private string _name;
 		
-		private EntitySet<rent> _rent;
+		private string _type;
+		
+		private string _year;
+		
+		private int _status_id;
+		
+		private EntitySet<rental> _rental;
+		
+		private EntityRef<status> _status;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -254,11 +273,18 @@ namespace ProjektDemo
     partial void OnidChanged();
     partial void OnnameChanging(string value);
     partial void OnnameChanged();
+    partial void OntypeChanging(string value);
+    partial void OntypeChanged();
+    partial void OnyearChanging(string value);
+    partial void OnyearChanged();
+    partial void Onstatus_idChanging(int value);
+    partial void Onstatus_idChanged();
     #endregion
 		
 		public video()
 		{
-			this._rent = new EntitySet<rent>(new Action<rent>(this.attach_rent), new Action<rent>(this.detach_rent));
+			this._rental = new EntitySet<rental>(new Action<rental>(this.attach_rental), new Action<rental>(this.detach_rental));
+			this._status = default(EntityRef<status>);
 			OnCreated();
 		}
 		
@@ -302,16 +328,114 @@ namespace ProjektDemo
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="video_rent", Storage="_rent", ThisKey="id", OtherKey="video_id")]
-		public EntitySet<rent> rent
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string type
 		{
 			get
 			{
-				return this._rent;
+				return this._type;
 			}
 			set
 			{
-				this._rent.Assign(value);
+				if ((this._type != value))
+				{
+					this.OntypeChanging(value);
+					this.SendPropertyChanging();
+					this._type = value;
+					this.SendPropertyChanged("type");
+					this.OntypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_year", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string year
+		{
+			get
+			{
+				return this._year;
+			}
+			set
+			{
+				if ((this._year != value))
+				{
+					this.OnyearChanging(value);
+					this.SendPropertyChanging();
+					this._year = value;
+					this.SendPropertyChanged("year");
+					this.OnyearChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_status_id", DbType="Int NOT NULL")]
+		public int status_id
+		{
+			get
+			{
+				return this._status_id;
+			}
+			set
+			{
+				if ((this._status_id != value))
+				{
+					if (this._status.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onstatus_idChanging(value);
+					this.SendPropertyChanging();
+					this._status_id = value;
+					this.SendPropertyChanged("status_id");
+					this.Onstatus_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="video_rental", Storage="_rental", ThisKey="id", OtherKey="video_id")]
+		public EntitySet<rental> rental
+		{
+			get
+			{
+				return this._rental;
+			}
+			set
+			{
+				this._rental.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="status_video", Storage="_status", ThisKey="status_id", OtherKey="id", IsForeignKey=true)]
+		public status status
+		{
+			get
+			{
+				return this._status.Entity;
+			}
+			set
+			{
+				status previousValue = this._status.Entity;
+				if (((previousValue != value) 
+							|| (this._status.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._status.Entity = null;
+						previousValue.video.Remove(this);
+					}
+					this._status.Entity = value;
+					if ((value != null))
+					{
+						value.video.Add(this);
+						this._status_id = value.id;
+					}
+					else
+					{
+						this._status_id = default(int);
+					}
+					this.SendPropertyChanged("status");
+				}
 			}
 		}
 		
@@ -335,21 +459,21 @@ namespace ProjektDemo
 			}
 		}
 		
-		private void attach_rent(rent entity)
+		private void attach_rental(rental entity)
 		{
 			this.SendPropertyChanging();
 			entity.video = this;
 		}
 		
-		private void detach_rent(rent entity)
+		private void detach_rental(rental entity)
 		{
 			this.SendPropertyChanging();
 			entity.video = null;
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.rent")]
-	public partial class rent : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.rental")]
+	public partial class rental : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -359,6 +483,8 @@ namespace ProjektDemo
 		private int _clients_id;
 		
 		private int _video_id;
+		
+		private System.DateTime _data;
 		
 		private EntityRef<clients> _clients;
 		
@@ -374,9 +500,11 @@ namespace ProjektDemo
     partial void Onclients_idChanged();
     partial void Onvideo_idChanging(int value);
     partial void Onvideo_idChanged();
+    partial void OndataChanging(System.DateTime value);
+    partial void OndataChanged();
     #endregion
 		
-		public rent()
+		public rental()
 		{
 			this._clients = default(EntityRef<clients>);
 			this._video = default(EntityRef<video>);
@@ -451,7 +579,27 @@ namespace ProjektDemo
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="clients_rent", Storage="_clients", ThisKey="clients_id", OtherKey="id", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_data", DbType="Date NOT NULL")]
+		public System.DateTime data
+		{
+			get
+			{
+				return this._data;
+			}
+			set
+			{
+				if ((this._data != value))
+				{
+					this.OndataChanging(value);
+					this.SendPropertyChanging();
+					this._data = value;
+					this.SendPropertyChanged("data");
+					this.OndataChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="clients_rental", Storage="_clients", ThisKey="clients_id", OtherKey="id", IsForeignKey=true)]
 		public clients clients
 		{
 			get
@@ -468,12 +616,12 @@ namespace ProjektDemo
 					if ((previousValue != null))
 					{
 						this._clients.Entity = null;
-						previousValue.rent.Remove(this);
+						previousValue.rental.Remove(this);
 					}
 					this._clients.Entity = value;
 					if ((value != null))
 					{
-						value.rent.Add(this);
+						value.rental.Add(this);
 						this._clients_id = value.id;
 					}
 					else
@@ -485,7 +633,7 @@ namespace ProjektDemo
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="video_rent", Storage="_video", ThisKey="video_id", OtherKey="id", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="video_rental", Storage="_video", ThisKey="video_id", OtherKey="id", IsForeignKey=true)]
 		public video video
 		{
 			get
@@ -502,12 +650,12 @@ namespace ProjektDemo
 					if ((previousValue != null))
 					{
 						this._video.Entity = null;
-						previousValue.rent.Remove(this);
+						previousValue.rental.Remove(this);
 					}
 					this._video.Entity = value;
 					if ((value != null))
 					{
-						value.rent.Add(this);
+						value.rental.Add(this);
 						this._video_id = value.id;
 					}
 					else
@@ -537,6 +685,120 @@ namespace ProjektDemo
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.status")]
+	public partial class status : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _name;
+		
+		private EntitySet<video> _video;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    #endregion
+		
+		public status()
+		{
+			this._video = new EntitySet<video>(new Action<video>(this.attach_video), new Action<video>(this.detach_video));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="status_video", Storage="_video", ThisKey="id", OtherKey="status_id")]
+		public EntitySet<video> video
+		{
+			get
+			{
+				return this._video;
+			}
+			set
+			{
+				this._video.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_video(video entity)
+		{
+			this.SendPropertyChanging();
+			entity.status = this;
+		}
+		
+		private void detach_video(video entity)
+		{
+			this.SendPropertyChanging();
+			entity.status = null;
 		}
 	}
 }

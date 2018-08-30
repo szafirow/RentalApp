@@ -15,6 +15,7 @@ namespace ProjektDemo
     {
         Connection c = new Connection();
         DataClassesDataContext db;
+        List<Type> listType;
 
         public Form2()
         {
@@ -29,14 +30,41 @@ namespace ProjektDemo
 
                 video v = new video();
                 v.name = textBox1.Text;
+                v.status_id = 1;
+                v.type = comboBox1.SelectedValue.ToString();
+                v.year = Convert.ToString(numericUpDown1.Value);
+
+               
                 db.video.InsertOnSubmit(v);
-                db.SubmitChanges();
+                try
+                {
+                    db.SubmitChanges();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    db.SubmitChanges();
+                }
+
                 MessageBox.Show("Great!");
 
             }
 
 
 
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            listType = new List<Type>();
+            listType.AddRange(new Type[] {
+                new Type { id = 1, name = "Movie" },
+                new Type {id = 0, name = "Serials" }
+                });
+
+            comboBox1.DataSource = listType;
+            comboBox1.DisplayMember = "name";
+            comboBox1.ValueMember = "id";
         }
     }
 }
