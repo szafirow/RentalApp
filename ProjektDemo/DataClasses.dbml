@@ -1,10 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Database" Class="DataClassesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="AppSettings" ConnectionString="Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True" SettingsObjectName="ProjektDemo.Properties.Settings" SettingsPropertyName="DatabaseConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.v_video" Member="v_video">
+    <Type Name="v_video">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="year" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="type_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="data_add" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="data_edit" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
   <Table Name="dbo.clients" Member="clients">
     <Type Name="clients">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="name" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="surname" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="data_add" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="data_edit" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
       <Association Name="clients_rental" Member="rental" ThisKey="id" OtherKey="clients_id" Type="rental" />
     </Type>
   </Table>
@@ -12,11 +25,14 @@
     <Type Name="video">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="name" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="type" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="year" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="type_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="data_add" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="data_edit" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
       <Association Name="video_rental" Member="rental" ThisKey="id" OtherKey="video_id" Type="rental" />
       <Association Name="status_video" Member="status" ThisKey="status_id" OtherKey="id" Type="status" IsForeignKey="true" />
+      <Association Name="type_video" Member="type" ThisKey="type_id" OtherKey="id" Type="type" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.rental" Member="rental">
@@ -24,7 +40,8 @@
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="clients_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="video_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="data" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="data_add" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="data_edit" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
       <Association Name="clients_rental" Member="clients" ThisKey="clients_id" OtherKey="id" Type="clients" IsForeignKey="true" />
       <Association Name="video_rental" Member="video" ThisKey="video_id" OtherKey="id" Type="video" IsForeignKey="true" />
     </Type>
@@ -34,6 +51,13 @@
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="name" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="status_video" Member="video" ThisKey="id" OtherKey="status_id" Type="video" />
+    </Type>
+  </Table>
+  <Table Name="dbo.type" Member="type">
+    <Type Name="type">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="Text NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Association Name="type_video" Member="video" ThisKey="id" OtherKey="type_id" Type="video" />
     </Type>
   </Table>
 </Database>

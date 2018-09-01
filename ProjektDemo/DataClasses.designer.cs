@@ -42,6 +42,9 @@ namespace ProjektDemo
     partial void Insertstatus(status instance);
     partial void Updatestatus(status instance);
     partial void Deletestatus(status instance);
+    partial void Inserttype(type instance);
+    partial void Updatetype(type instance);
+    partial void Deletetype(type instance);
     #endregion
 		
 		public DataClassesDataContext() : 
@@ -72,6 +75,14 @@ namespace ProjektDemo
 				base(connection, mappingSource)
 		{
 			OnCreated();
+		}
+		
+		public System.Data.Linq.Table<v_video> v_video
+		{
+			get
+			{
+				return this.GetTable<v_video>();
+			}
 		}
 		
 		public System.Data.Linq.Table<clients> clients
@@ -105,6 +116,149 @@ namespace ProjektDemo
 				return this.GetTable<status>();
 			}
 		}
+		
+		public System.Data.Linq.Table<type> type
+		{
+			get
+			{
+				return this.GetTable<type>();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.v_video")]
+	public partial class v_video
+	{
+		
+		private int _id;
+		
+		private string _name;
+		
+		private string _year;
+		
+		private int _type_id;
+		
+		private int _status_id;
+		
+		private System.DateTime _data_add;
+		
+		private System.DateTime _data_edit;
+		
+		public v_video()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.Always, DbType="Int NOT NULL IDENTITY", IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this._id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this._name = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_year", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string year
+		{
+			get
+			{
+				return this._year;
+			}
+			set
+			{
+				if ((this._year != value))
+				{
+					this._year = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type_id", DbType="Int NOT NULL")]
+		public int type_id
+		{
+			get
+			{
+				return this._type_id;
+			}
+			set
+			{
+				if ((this._type_id != value))
+				{
+					this._type_id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_status_id", DbType="Int NOT NULL")]
+		public int status_id
+		{
+			get
+			{
+				return this._status_id;
+			}
+			set
+			{
+				if ((this._status_id != value))
+				{
+					this._status_id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_data_add", DbType="Date NOT NULL")]
+		public System.DateTime data_add
+		{
+			get
+			{
+				return this._data_add;
+			}
+			set
+			{
+				if ((this._data_add != value))
+				{
+					this._data_add = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_data_edit", DbType="Date NOT NULL")]
+		public System.DateTime data_edit
+		{
+			get
+			{
+				return this._data_edit;
+			}
+			set
+			{
+				if ((this._data_edit != value))
+				{
+					this._data_edit = value;
+				}
+			}
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.clients")]
@@ -119,6 +273,10 @@ namespace ProjektDemo
 		
 		private string _surname;
 		
+		private System.DateTime _data_add;
+		
+		private System.DateTime _data_edit;
+		
 		private EntitySet<rental> _rental;
 		
     #region Extensibility Method Definitions
@@ -131,6 +289,10 @@ namespace ProjektDemo
     partial void OnnameChanged();
     partial void OnsurnameChanging(string value);
     partial void OnsurnameChanged();
+    partial void Ondata_addChanging(System.DateTime value);
+    partial void Ondata_addChanged();
+    partial void Ondata_editChanging(System.DateTime value);
+    partial void Ondata_editChanged();
     #endregion
 		
 		public clients()
@@ -199,6 +361,46 @@ namespace ProjektDemo
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_data_add", DbType="Date NOT NULL")]
+		public System.DateTime data_add
+		{
+			get
+			{
+				return this._data_add;
+			}
+			set
+			{
+				if ((this._data_add != value))
+				{
+					this.Ondata_addChanging(value);
+					this.SendPropertyChanging();
+					this._data_add = value;
+					this.SendPropertyChanged("data_add");
+					this.Ondata_addChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_data_edit", DbType="Date NOT NULL")]
+		public System.DateTime data_edit
+		{
+			get
+			{
+				return this._data_edit;
+			}
+			set
+			{
+				if ((this._data_edit != value))
+				{
+					this.Ondata_editChanging(value);
+					this.SendPropertyChanging();
+					this._data_edit = value;
+					this.SendPropertyChanged("data_edit");
+					this.Ondata_editChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="clients_rental", Storage="_rental", ThisKey="id", OtherKey="clients_id")]
 		public EntitySet<rental> rental
 		{
@@ -255,15 +457,21 @@ namespace ProjektDemo
 		
 		private string _name;
 		
-		private string _type;
-		
 		private string _year;
 		
+		private int _type_id;
+		
 		private int _status_id;
+		
+		private System.DateTime _data_add;
+		
+		private System.DateTime _data_edit;
 		
 		private EntitySet<rental> _rental;
 		
 		private EntityRef<status> _status;
+		
+		private EntityRef<type> _type;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -273,18 +481,23 @@ namespace ProjektDemo
     partial void OnidChanged();
     partial void OnnameChanging(string value);
     partial void OnnameChanged();
-    partial void OntypeChanging(string value);
-    partial void OntypeChanged();
     partial void OnyearChanging(string value);
     partial void OnyearChanged();
+    partial void Ontype_idChanging(int value);
+    partial void Ontype_idChanged();
     partial void Onstatus_idChanging(int value);
     partial void Onstatus_idChanged();
+    partial void Ondata_addChanging(System.DateTime value);
+    partial void Ondata_addChanged();
+    partial void Ondata_editChanging(System.DateTime value);
+    partial void Ondata_editChanged();
     #endregion
 		
 		public video()
 		{
 			this._rental = new EntitySet<rental>(new Action<rental>(this.attach_rental), new Action<rental>(this.detach_rental));
 			this._status = default(EntityRef<status>);
+			this._type = default(EntityRef<type>);
 			OnCreated();
 		}
 		
@@ -328,26 +541,6 @@ namespace ProjektDemo
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
-		public string type
-		{
-			get
-			{
-				return this._type;
-			}
-			set
-			{
-				if ((this._type != value))
-				{
-					this.OntypeChanging(value);
-					this.SendPropertyChanging();
-					this._type = value;
-					this.SendPropertyChanged("type");
-					this.OntypeChanged();
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_year", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
 		public string year
 		{
@@ -364,6 +557,30 @@ namespace ProjektDemo
 					this._year = value;
 					this.SendPropertyChanged("year");
 					this.OnyearChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type_id", DbType="Int NOT NULL")]
+		public int type_id
+		{
+			get
+			{
+				return this._type_id;
+			}
+			set
+			{
+				if ((this._type_id != value))
+				{
+					if (this._type.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Ontype_idChanging(value);
+					this.SendPropertyChanging();
+					this._type_id = value;
+					this.SendPropertyChanged("type_id");
+					this.Ontype_idChanged();
 				}
 			}
 		}
@@ -388,6 +605,46 @@ namespace ProjektDemo
 					this._status_id = value;
 					this.SendPropertyChanged("status_id");
 					this.Onstatus_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_data_add", DbType="Date NOT NULL")]
+		public System.DateTime data_add
+		{
+			get
+			{
+				return this._data_add;
+			}
+			set
+			{
+				if ((this._data_add != value))
+				{
+					this.Ondata_addChanging(value);
+					this.SendPropertyChanging();
+					this._data_add = value;
+					this.SendPropertyChanged("data_add");
+					this.Ondata_addChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_data_edit", DbType="Date NOT NULL")]
+		public System.DateTime data_edit
+		{
+			get
+			{
+				return this._data_edit;
+			}
+			set
+			{
+				if ((this._data_edit != value))
+				{
+					this.Ondata_editChanging(value);
+					this.SendPropertyChanging();
+					this._data_edit = value;
+					this.SendPropertyChanged("data_edit");
+					this.Ondata_editChanged();
 				}
 			}
 		}
@@ -439,6 +696,40 @@ namespace ProjektDemo
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="type_video", Storage="_type", ThisKey="type_id", OtherKey="id", IsForeignKey=true)]
+		public type type
+		{
+			get
+			{
+				return this._type.Entity;
+			}
+			set
+			{
+				type previousValue = this._type.Entity;
+				if (((previousValue != value) 
+							|| (this._type.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._type.Entity = null;
+						previousValue.video.Remove(this);
+					}
+					this._type.Entity = value;
+					if ((value != null))
+					{
+						value.video.Add(this);
+						this._type_id = value.id;
+					}
+					else
+					{
+						this._type_id = default(int);
+					}
+					this.SendPropertyChanged("type");
+				}
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -484,7 +775,9 @@ namespace ProjektDemo
 		
 		private int _video_id;
 		
-		private System.DateTime _data;
+		private System.DateTime _data_add;
+		
+		private System.DateTime _data_edit;
 		
 		private EntityRef<clients> _clients;
 		
@@ -500,8 +793,10 @@ namespace ProjektDemo
     partial void Onclients_idChanged();
     partial void Onvideo_idChanging(int value);
     partial void Onvideo_idChanged();
-    partial void OndataChanging(System.DateTime value);
-    partial void OndataChanged();
+    partial void Ondata_addChanging(System.DateTime value);
+    partial void Ondata_addChanged();
+    partial void Ondata_editChanging(System.DateTime value);
+    partial void Ondata_editChanged();
     #endregion
 		
 		public rental()
@@ -579,22 +874,42 @@ namespace ProjektDemo
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_data", DbType="Date NOT NULL")]
-		public System.DateTime data
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_data_add", DbType="Date NOT NULL")]
+		public System.DateTime data_add
 		{
 			get
 			{
-				return this._data;
+				return this._data_add;
 			}
 			set
 			{
-				if ((this._data != value))
+				if ((this._data_add != value))
 				{
-					this.OndataChanging(value);
+					this.Ondata_addChanging(value);
 					this.SendPropertyChanging();
-					this._data = value;
-					this.SendPropertyChanged("data");
-					this.OndataChanged();
+					this._data_add = value;
+					this.SendPropertyChanged("data_add");
+					this.Ondata_addChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_data_edit", DbType="Date NOT NULL")]
+		public System.DateTime data_edit
+		{
+			get
+			{
+				return this._data_edit;
+			}
+			set
+			{
+				if ((this._data_edit != value))
+				{
+					this.Ondata_editChanging(value);
+					this.SendPropertyChanging();
+					this._data_edit = value;
+					this.SendPropertyChanged("data_edit");
+					this.Ondata_editChanged();
 				}
 			}
 		}
@@ -799,6 +1114,120 @@ namespace ProjektDemo
 		{
 			this.SendPropertyChanging();
 			entity.status = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.type")]
+	public partial class type : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _name;
+		
+		private EntitySet<video> _video;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    #endregion
+		
+		public type()
+		{
+			this._video = new EntitySet<video>(new Action<video>(this.attach_video), new Action<video>(this.detach_video));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="Text NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="type_video", Storage="_video", ThisKey="id", OtherKey="type_id")]
+		public EntitySet<video> video
+		{
+			get
+			{
+				return this._video;
+			}
+			set
+			{
+				this._video.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_video(video entity)
+		{
+			this.SendPropertyChanging();
+			entity.type = this;
+		}
+		
+		private void detach_video(video entity)
+		{
+			this.SendPropertyChanging();
+			entity.type = null;
 		}
 	}
 }

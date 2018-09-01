@@ -1,78 +1,187 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace ProjektDemo
+﻿namespace ProjektDemo
 {
+    using System;
+    using System.Data;
+    using System.Linq;
+    using System.Windows.Forms;
 
+    /// <summary>
+    /// Defines the <see cref="Form3" />
+    /// </summary>
     public partial class Form3 : Form
     {
-        Connection c = new Connection();
-        DataClassesDataContext db;
-        //List<Temp> listTemp;
+        /// <summary>
+        /// Defines the c
+        /// </summary>
+        internal Connection c = new Connection();
 
+        /// <summary>
+        /// Defines the db
+        /// </summary>
+        internal DataClassesDataContext db;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Form3"/> class.
+        /// </summary>
         public Form3()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Loading a form video
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="EventArgs"/></param>
         private void Form3_Load(object sender, EventArgs e)
         {
             dataGridView1.ReadOnly = true;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.AllowUserToAddRows = false;
+            textBox1.Enabled = false;
+            comboBox1.Enabled = false;
+            comboBox2.Enabled = false;
+            numericUpDown1.Enabled = false;
+            button1.Enabled = false;
+            button2.Enabled = false;
 
             using (db = new DataClassesDataContext(c.connectionString))
             {
-                var video_query = (from v in db.video
-                                   join s in db.status on v.status_id equals s.id
-                                   orderby v.id descending
-                                   select new
-                                   {
-                                       name = v.name,
-                                       status = s.name,
-                                       type = v.type,
-                                       year = v.year
-                                   });
-                                   
+                /*   var video_query = (from v in db.video
+                                      join s in db.status on v.status_id equals s.id
+                                      orderby v.id descending
+                                      select new
+                                      {
+                                          id = v.id,
+                                          name = v.name,
+                                          status = s.name,
+                                          type = v.type,
+                                          year = v.year
+                                      });
+                     */
 
 
-            dataGridView1.DataSource = video_query.ToList();
+                // dataGridView1.DataSource = video_query.ToList();
+                dataGridView1.DataSource = db.v_video;
             }
         }
 
+        /// <summary>
+        /// Deleting video
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="EventArgs"/></param>
         private void button1_Click(object sender, EventArgs e)
         {
+            try
+            {
+                using (db = new DataClassesDataContext(c.connectionString))
+                {
+                    int videoID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells[0].Value);
 
+                    var results1 = (
+                    from v in db.video
+                    where v.id == videoID
+                    select v).FirstOrDefault();
+
+                    db.video.DeleteOnSubmit(results1);
+                    db.SubmitChanges();
+
+                    var count = (from r in db.rental
+                                 where r.video_id == videoID
+                                 select r).Count();
+
+                    if (count > 0)
+                    {
+                        var results2 = (
+                        from r in db.rental
+                        where r.video_id == videoID
+                        select r).FirstOrDefault();
+
+                        db.rental.DeleteOnSubmit(results2);
+                        db.SubmitChanges();
+                    }
+
+                    dataGridView1.DataSource = db.v_video;
+                    MessageBox.Show("Deleted!");
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
+        /// <summary>
+        /// Clicking in dataGridView1
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="DataGridViewCellEventArgs"/></param>
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            textBox1.Text = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();
+            textBox1.Enabled = true;
+            comboBox1.Enabled = true;
+            comboBox2.Enabled = true;
+            numericUpDown1.Enabled = true;
+            button1.Enabled = true;
+            button2.Enabled = true;
 
-/*
-            listTemp = new List<Temp>();
-            listTemp.AddRange(new Temp[] {
-                new Temp {id = 0, name = "Nie" },
-                new Temp { id = 1, name = "Tak" }
-            });
-           */
+            textBox1.Text = dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
+   
+            numericUpDown1.Value = Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells[2].Value);
 
-            using (db = new DataClassesDataContext())
+
+
+
+            using (db = new DataClassesDataContext(c.connectionString))
             {
+                int videoID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells[0].Value);
+
+                var results3 = (
+                      from v in db.video
+                      where v.id == videoID
+                      select v.type_id).Concat(
+
+                    (from t in db.type
+                    select t.id).Except(from r in db.video
+                                        where r.id == videoID
+                                        select r.type_id) );
+                    
+                    
+                    /*.Except
+                    (
+                    from r in db.video
+                    where r.id == videoID
+                    select r.type_id
+                    );*/
+
+
+                    
+
+
+
+                textBox2.Text = results3.ToString();
+
+                // comboBox1.DisplayMember = "name";
+                // comboBox1.ValueMember = "id";
+                //comboBox1.DataSource = results3.ToString();
+
+
               
+                comboBox1.DisplayMember = "type_id";
+                comboBox1.ValueMember = "type_id";
+                comboBox1.DataSource = results3.ToList();
 
-                comboBox1.DisplayMember = "name";
-                comboBox1.ValueMember = "id";
-                comboBox1.DataSource = db.status.ToList<status>();
-            } 
 
+
+            }
+            
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
 
         }
     }

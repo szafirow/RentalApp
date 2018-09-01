@@ -15,7 +15,7 @@ namespace ProjektDemo
     {
         Connection c = new Connection();
         DataClassesDataContext db;
-        List<Type> listType;
+      
 
         public Form2()
         {
@@ -31,10 +31,11 @@ namespace ProjektDemo
                 video v = new video();
                 v.name = textBox1.Text;
                 v.status_id = 1;
-                v.type = comboBox1.SelectedValue.ToString();
+                v.type_id = Int32.Parse((comboBox1.SelectedValue.ToString()));
                 v.year = Convert.ToString(numericUpDown1.Value);
+                v.data_add = Convert.ToDateTime(DateTime.Now.ToShortDateString().ToString());
 
-               
+
                 db.video.InsertOnSubmit(v);
                 try
                 {
@@ -56,15 +57,12 @@ namespace ProjektDemo
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            listType = new List<Type>();
-            listType.AddRange(new Type[] {
-                new Type { id = 1, name = "Movie" },
-                new Type {id = 0, name = "Serials" }
-                });
-
-            comboBox1.DataSource = listType;
-            comboBox1.DisplayMember = "name";
-            comboBox1.ValueMember = "id";
+            using (db = new DataClassesDataContext(c.connectionString))
+            {
+                comboBox1.DisplayMember = "name";
+                comboBox1.ValueMember = "id";
+                comboBox1.DataSource = db.type.ToList<type>();
+            }
         }
     }
 }
