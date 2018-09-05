@@ -105,6 +105,19 @@
                     dataGridView1.DataSource = db.v_video;
                     MessageBox.Show("Deleted!");
 
+
+                    textBox1.Clear();
+                    comboBox1.DataSource = null;
+                    comboBox2.DataSource = null;
+                    numericUpDown1.Value = 1895;
+
+                    textBox1.Enabled = false;
+                    comboBox1.Enabled = false;
+                    comboBox2.Enabled = false;
+                    numericUpDown1.Enabled = false;
+                    button1.Enabled = false;
+                    button2.Enabled = false;
+
                 }
 
             }
@@ -115,7 +128,7 @@
         }
 
         /// <summary>
-        /// Clicking in dataGridView1
+        /// Clicking in dataGridView1/ Filling blocked fields
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="DataGridViewCellEventArgs"/></param>
@@ -129,11 +142,7 @@
             button2.Enabled = true;
 
             textBox1.Text = dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
-   
             numericUpDown1.Value = Convert.ToDecimal(dataGridView1.SelectedRows[0].Cells[2].Value);
-
-
-
 
             using (db = new DataClassesDataContext(c.connectionString))
             {
@@ -145,44 +154,71 @@
                       select v.type_id).Concat(
 
                     (from t in db.type
-                    select t.id).Except(from r in db.video
-                                        where r.id == videoID
-                                        select r.type_id) );
-                    
-                    
-                    /*.Except
-                    (
-                    from r in db.video
-                    where r.id == videoID
-                    select r.type_id
-                    );*/
+                     select t.id).Except(from v in db.video
+                                         where v.id == videoID
+                                         select v.type_id));
 
-
-                    
-
-
-
-                textBox2.Text = results3.ToString();
-
-                // comboBox1.DisplayMember = "name";
-                // comboBox1.ValueMember = "id";
-                //comboBox1.DataSource = results3.ToString();
-
-
-              
-                comboBox1.DisplayMember = "type_id";
+                comboBox1.DisplayMember = "name";
                 comboBox1.ValueMember = "type_id";
                 comboBox1.DataSource = results3.ToList();
 
 
+                var results4 = (
+                      from v in db.video
+                      where v.id == videoID
+                      select v.status_id).Concat(
+
+                    (from s in db.status
+                     select s.id).Except(from v in db.video
+                                         where v.id == videoID
+                                         select v.status_id));
+
+                comboBox2.DisplayMember = "status_id";
+                comboBox2.ValueMember = "status_id";
+                comboBox2.DataSource = results4.ToList();
 
             }
-            
         }
 
+        /// <summary>
+        /// Update
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="EventArgs"/></param>
         private void button2_Click(object sender, EventArgs e)
         {
+            int videoID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells[0].Value);
 
+            using (db = new DataClassesDataContext(c.connectionString))
+            {
+                var results = (
+                   from v in db.video
+                   where v.id == videoID
+                   select v);
+
+                foreach (var res in results)
+                {
+                    video v_now = db.video.Single(v => v.id == res.id);
+                    v_now.name = textBox1.Text;
+                    v_now.type_id = Int32.Parse((comboBox1.SelectedValue.ToString()));
+                    v_now.year = Convert.ToString(numericUpDown1.Value);
+                    v_now.status_id = Int32.Parse((comboBox2.SelectedValue.ToString()));
+                    v_now.data_edit = Convert.ToDateTime(DateTime.Now.ToShortDateString().ToString());
+                    db.SubmitChanges();
+
+                    dataGridView1.DataSource = db.v_video;
+                    MessageBox.Show("Updated!");
+                }
+
+                /*  var count = (from r in db.rental
+                               where r.video_id == videoID
+                               select r).Count();
+
+                  if (count > 0)
+                  {
+                  }
+                  */
+            }
         }
     }
 }
