@@ -1,6 +1,7 @@
 ﻿namespace ProjektDemo
 {
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Linq;
     using System.Windows.Forms;
@@ -10,6 +11,7 @@
     /// </summary>
     public partial class Form3 : Form
     {
+
         /// <summary>
         /// Defines the c
         /// </summary>
@@ -19,7 +21,7 @@
         /// Defines the db
         /// </summary>
         internal DataClassesDataContext db;
-
+        List<Temp> listTemp;
         /// <summary>
         /// Initializes a new instance of the <see cref="Form3"/> class.
         /// </summary>
@@ -41,6 +43,7 @@
             textBox1.Enabled = false;
             comboBox1.Enabled = false;
             comboBox2.Enabled = false;
+            comboBox3.Enabled = false;
             numericUpDown1.Enabled = false;
             button1.Enabled = false;
             button2.Enabled = false;
@@ -137,6 +140,7 @@
             textBox1.Enabled = true;
             comboBox1.Enabled = true;
             comboBox2.Enabled = true;
+            comboBox3.Enabled = true;
             numericUpDown1.Enabled = true;
             button1.Enabled = true;
             button2.Enabled = true;
@@ -147,7 +151,7 @@
             using (db = new DataClassesDataContext(c.connectionString))
             {
                 int videoID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells[0].Value);
-
+                
                 var results3 = (
                       from v in db.video
                       where v.id == videoID
@@ -178,6 +182,30 @@
                 comboBox2.DataSource = results4.ToList();
 
             }
+
+
+            listTemp = new List<Temp>();
+            int newID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells[3].Value);  
+            if (newID == 1)
+            {
+                listTemp.AddRange(new Temp[] {
+                    new Temp { id = 1, name = "Tak" },
+                    new Temp {id = 0, name = "Nie" }
+                });
+            }
+            else if (newID == 0)
+            {
+                listTemp.AddRange(new Temp[] {
+                    new Temp {id = 0, name = "Nie" },
+                    new Temp { id = 1, name = "Tak" }
+                });
+            }
+           
+
+            comboBox3.DataSource = listTemp;
+            comboBox3.DisplayMember = "name";
+            comboBox3.ValueMember = "id";
+
         }
 
         /// <summary>
@@ -187,27 +215,36 @@
         /// <param name="e">The e<see cref="EventArgs"/></param>
         private void button2_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(textBox1.Text))
+            {
+                MessageBox.Show("You must enter the name of the movie!");
+            }
+            else
+            {
+
+            
             int videoID = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells[0].Value);
 
-            using (db = new DataClassesDataContext(c.connectionString))
-            {
-                var results = (
-                   from v in db.video
-                   where v.id == videoID
-                   select v);
-
-                foreach (var res in results)
+                using (db = new DataClassesDataContext(c.connectionString))
                 {
-                    video v_now = db.video.Single(v => v.id == res.id);
-                    v_now.name = textBox1.Text;
-                    v_now.type_id = Int32.Parse((comboBox1.SelectedValue.ToString()));
-                    v_now.year = Convert.ToString(numericUpDown1.Value);
-                    v_now.status_id = Int32.Parse((comboBox2.SelectedValue.ToString()));
-                    v_now.data_edit = Convert.ToDateTime(DateTime.Now.ToShortDateString().ToString());
-                    db.SubmitChanges();
+                    var results = (
+                       from v in db.video
+                       where v.id == videoID
+                       select v);
 
-                    dataGridView1.DataSource = db.v_video;
-                    MessageBox.Show("Updated!");
+                    foreach (var res in results)
+                    {
+                        video v_now = db.video.Single(v => v.id == res.id);
+                        v_now.name = textBox1.Text;
+                        v_now.type_id = Int32.Parse((comboBox1.SelectedValue.ToString()));
+                        v_now.year = Convert.ToString(numericUpDown1.Value);
+                        v_now.status_id = Int32.Parse((comboBox2.SelectedValue.ToString()));
+                        v_now.data_edit = Convert.ToDateTime(DateTime.Now.ToShortDateString().ToString());
+                        db.SubmitChanges();
+
+                        dataGridView1.DataSource = db.v_video;
+                        MessageBox.Show("Updated!");
+                    }
                 }
 
                 /*  var count = (from r in db.rental

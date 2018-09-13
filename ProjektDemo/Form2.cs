@@ -15,7 +15,7 @@ namespace ProjektDemo
     {
         Connection c = new Connection();
         DataClassesDataContext db;
-      
+        List<Temp> listTemp;
 
         public Form2()
         {
@@ -24,31 +24,39 @@ namespace ProjektDemo
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-            using (db = new DataClassesDataContext(c.connectionString))
+            if (string.IsNullOrWhiteSpace(textBox1.Text))
             {
-
-                video v = new video();
-                v.name = textBox1.Text;
-                v.status_id = 1;
-                v.type_id = Int32.Parse((comboBox1.SelectedValue.ToString()));
-                v.year = Convert.ToString(numericUpDown1.Value);
-                v.data_add = Convert.ToDateTime(DateTime.Now.ToShortDateString().ToString());
-
-
-                db.video.InsertOnSubmit(v);
-                try
+                MessageBox.Show("You must enter the name of the movie!");
+            }
+            else
+            {
+                using (db = new DataClassesDataContext(c.connectionString))
                 {
-                    db.SubmitChanges();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    db.SubmitChanges();
-                }
 
-                MessageBox.Show("Great!");
 
+                    video v = new video();
+                    v.name = textBox1.Text;
+                    v.status_id = 1;
+                    v.type_id = Int32.Parse((comboBox1.SelectedValue.ToString()));
+                    v.year = Convert.ToString(numericUpDown1.Value);
+                    v.@new = Int32.Parse((comboBox2.SelectedValue.ToString()));
+                    v.data_add = Convert.ToDateTime(DateTime.Now.ToShortDateString().ToString());
+                   
+
+
+                    db.video.InsertOnSubmit(v);
+                    try
+                    {
+                        db.SubmitChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                        db.SubmitChanges();
+                    }
+
+                    MessageBox.Show("Great!");
+                }
             }
 
 
@@ -63,6 +71,18 @@ namespace ProjektDemo
                 comboBox1.ValueMember = "id";
                 comboBox1.DataSource = db.type.ToList<type>();
             }
+
+            listTemp = new List<Temp>();
+            listTemp.AddRange(new Temp[] {
+                new Temp { id = 1, name = "Tak" },
+                new Temp {id = 0, name = "Nie" }
+            });
+
+            comboBox2.DataSource = listTemp;
+            comboBox2.DisplayMember = "name";
+            comboBox2.ValueMember = "id";
+
+
         }
     }
 }
